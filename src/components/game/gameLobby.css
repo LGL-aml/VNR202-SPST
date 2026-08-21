@@ -355,12 +355,27 @@
   text-transform: uppercase;
 }
 
-.game-waiting__players ul {
+.game-waiting__list {
   display: grid;
   gap: 8px;
+  max-height: min(280px, 38vh);
   margin: 0 0 28px;
-  padding: 0;
+  padding: 0 4px 0 0;
+  overflow-x: hidden;
+  overflow-y: auto;
   list-style: none;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(38, 56, 45, 0.35) transparent;
+}
+
+.game-waiting__list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.game-waiting__list::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(38, 56, 45, 0.28);
 }
 
 .game-waiting__players li {

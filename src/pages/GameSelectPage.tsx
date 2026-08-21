@@ -220,7 +220,7 @@ function WaitingRoomView({
           <h2>
             <Icon name="group" /> Người chơi ({players.length}/40)
           </h2>
-          <ul>
+          <ul className="game-waiting__list">
             {players.map((player) => (
               <li key={player.id}>
                 <span className={`game-waiting__avatar ${player.isHost ? 'is-host' : ''}`}>

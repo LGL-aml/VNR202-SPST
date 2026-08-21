@@ -7,11 +7,14 @@ const STORAGE_KEY = 'vnr-site-audio'
  * Site-wide ambient track for the header volume control.
  * Tries autoplay on first visit; if the browser blocks it, starts on the first
  * user gesture (click / tap / key / scroll) so music still feels automatic.
+ * Once the user explicitly mutes, auto-start / gesture unlock never restarts it.
  */
 export function useSiteAudio() {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [soundEnabled, setSoundEnabled] = useState(false)
   const unlockedRef = useRef(false)
+  const userDisabledRef = useRef(false)
+  const removeGestureListenersRef = useRef<() => void>(() => {})
 
   useEffect(() => {
     let preferredOff = false
@@ -20,6 +23,7 @@ export function useSiteAudio() {
     } catch {
       /* ignore */
     }
+    userDisabledRef.current = preferredOff
 
     const audio = new Audio(AUDIO_SRC)
     audio.loop = true
@@ -44,6 +48,8 @@ export function useSiteAudio() {
     }
 
     const startPlayback = async () => {
+      // User muted explicitly — treat as settled so gesture handlers detach.
+      if (userDisabledRef.current) return true
       if (unlockedRef.current) return true
       try {
         await audio.play()
@@ -62,7 +68,7 @@ export function useSiteAudio() {
     const armGestureUnlock = () => {
       const onGesture = () => {
         void startPlayback().then((ok) => {
-          if (ok) removeGestureListeners()
+          if (ok) removeGestureListenersRef.current()
         })
       }
       gestureEvents.forEach((eventName) => {
@@ -75,12 +81,12 @@ export function useSiteAudio() {
       }
     }
 
-    let removeGestureListeners = () => {}
+    removeGestureListenersRef.current = () => {}
 
     const tryAutoplay = async () => {
       const ok = await startPlayback()
       if (!ok) {
-        removeGestureListeners = armGestureUnlock()
+        removeGestureListenersRef.current = armGestureUnlock()
       }
     }
 
@@ -92,7 +98,7 @@ export function useSiteAudio() {
     void tryAutoplay()
 
     return () => {
-      removeGestureListeners()
+      removeGestureListenersRef.current()
       audio.removeEventListener('canplaythrough', onCanPlay)
       audio.pause()
       audio.src = ''
@@ -106,7 +112,12 @@ export function useSiteAudio() {
 
     if (soundEnabled) {
       audio.pause()
-      unlockedRef.current = false
+      userDisabledRef.current = true
+      // Keep unlocked so residual gesture handlers cannot call play() again;
+      // also detach them immediately.
+      unlockedRef.current = true
+      removeGestureListenersRef.current()
+      removeGestureListenersRef.current = () => {}
       setSoundEnabled(false)
       try {
         localStorage.setItem(STORAGE_KEY, 'off')
@@ -117,9 +128,12 @@ export function useSiteAudio() {
     }
 
     try {
+      userDisabledRef.current = false
       if (audio.paused) audio.currentTime = audio.currentTime || 0
       await audio.play()
       unlockedRef.current = true
+      removeGestureListenersRef.current()
+      removeGestureListenersRef.current = () => {}
       setSoundEnabled(true)
       try {
         localStorage.setItem(STORAGE_KEY, 'on')

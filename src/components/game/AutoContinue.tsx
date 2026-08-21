@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, startTransition } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Icon } from '../common/Icon'
 
@@ -7,8 +7,8 @@ const AUTO_MS = 5000
 type AutoContinueProps = {
   to: string
   label: string
-  /** Called once before navigating (e.g. mark level complete). Return false to cancel auto-nav. */
-  onBeforeNavigate?: () => Promise<boolean> | boolean
+  /** Optional side-effect before navigate. Never blocks navigation. */
+  onBeforeNavigate?: () => void
 }
 
 /** Button + 5s auto-advance after a level (or cinematic) completes. */
@@ -18,19 +18,18 @@ export function AutoContinue({ to, label, onBeforeNavigate }: AutoContinueProps)
   const [busy, setBusy] = useState(false)
   const goingRef = useRef(false)
 
-  const go = async () => {
+  const go = () => {
     if (goingRef.current) return
     goingRef.current = true
     setBusy(true)
-    if (onBeforeNavigate) {
-      const ok = await onBeforeNavigate()
-      if (!ok) {
-        goingRef.current = false
-        setBusy(false)
-        return
-      }
+    try {
+      onBeforeNavigate?.()
+    } catch {
+      /* ignore side-effect errors */
     }
-    navigate(to)
+    startTransition(() => {
+      navigate(to)
+    })
   }
 
   useEffect(() => {
@@ -38,7 +37,7 @@ export function AutoContinue({ to, label, onBeforeNavigate }: AutoContinueProps)
       setSeconds((s) => Math.max(0, s - 1))
     }, 1000)
     const timer = window.setTimeout(() => {
-      void go()
+      go()
     }, AUTO_MS)
     return () => {
       window.clearInterval(tick)
@@ -53,7 +52,7 @@ export function AutoContinue({ to, label, onBeforeNavigate }: AutoContinueProps)
       <p className="auto-continue__countdown" aria-live="polite">
         Tự chuyển sau <strong>{seconds}s</strong>
       </p>
-      <button className="button" disabled={busy} onClick={() => void go()} type="button">
+      <button className="button" disabled={busy} onClick={go} type="button">
         {label} <Icon name="arrow_forward" />
       </button>
     </div>

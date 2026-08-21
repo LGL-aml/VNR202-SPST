@@ -1,3 +1,10 @@
+.fc-route-fallback {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  background: #120e0a;
+}
+
 .fc {
   position: fixed;
   inset: 0;
@@ -7,30 +14,102 @@
   color: #f3ead6;
 }
 
+.fc__bridge {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 18px;
+  text-align: center;
+}
+
+.fc__bridge-bg {
+  position: absolute;
+  inset: -4%;
+  background-position: left bottom;
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: brightness(0.55) saturate(0.9);
+  transform: scale(1.04);
+  animation: fc-bridge-drift 8s ease-in-out infinite alternate;
+}
+
+.fc__bridge-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgba(18, 14, 10, 0.2), rgba(18, 14, 10, 0.72) 70%),
+    linear-gradient(180deg, rgba(12, 10, 8, 0.35), rgba(12, 10, 8, 0.55));
+}
+
+.fc__bridge-title {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: #f6edd8;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.fc__bridge-line {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: min(42vw, 220px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #d7b56f, transparent);
+  transform: scaleX(0.35);
+  transform-origin: center;
+}
+
+.fc__bridge-sub {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: rgba(232, 212, 168, 0.72);
+  font-family: var(--font-meta);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  animation: fc-bridge-fade 1.6s ease-in-out infinite alternate;
+}
+
 .fc__stage {
   position: absolute;
   inset: 0;
+  opacity: 0;
+  transition: opacity 0.45s ease;
 }
 
-.fc__video {
+.fc__stage.is-ready {
+  opacity: 1;
+}
+
+.fc__video-blur {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-}
-
-.fc__video--blur {
-  object-fit: cover;
-  transform: scale(1.12);
-  filter: blur(28px) brightness(0.72) saturate(1.05);
+  inset: -6%;
+  background-position: left bottom;
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: blur(28px) brightness(0.62) saturate(1.05);
+  transform: scale(1.1);
   pointer-events: none;
 }
 
 .fc__video--main {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   object-position: center center;
-  z-index: 1;
+  background: transparent;
 }
 
 .fc__video-veil {
@@ -41,6 +120,31 @@
   background:
     linear-gradient(180deg, rgba(12, 10, 8, 0.16), transparent 22%, transparent 78%, rgba(12, 10, 8, 0.22)),
     radial-gradient(ellipse at center, transparent 58%, rgba(12, 10, 8, 0.2));
+}
+
+.fc__buffer {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  color: rgba(243, 234, 214, 0.8);
+  font-family: var(--font-meta);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.fc__buffer-pulse {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d7b56f;
+  box-shadow: 0 0 0 0 rgba(215, 181, 111, 0.45);
+  animation: fc-pulse 1.2s ease-out infinite;
 }
 
 .fc__skip {
@@ -75,7 +179,6 @@
   place-items: center;
   opacity: 0;
   background-color: #120e0a;
-  /* Crop top/right if needed — keep bunker + flag visible at bottom-left */
   background-position: left bottom;
   background-size: cover;
   background-repeat: no-repeat;
@@ -141,6 +244,22 @@
   min-width: 220px;
 }
 
+@keyframes fc-bridge-drift {
+  from { transform: scale(1.04) translate3d(0, 0, 0); }
+  to { transform: scale(1.08) translate3d(-1.5%, 1%, 0); }
+}
+
+@keyframes fc-bridge-fade {
+  from { opacity: 0.45; }
+  to { opacity: 0.9; }
+}
+
+@keyframes fc-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(215, 181, 111, 0.5); }
+  70% { box-shadow: 0 0 0 14px rgba(215, 181, 111, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(215, 181, 111, 0); }
+}
+
 @media (max-width: 640px) {
   .fc__victory-title {
     font-size: clamp(1.85rem, 10vw, 2.8rem);
@@ -153,5 +272,13 @@
   .fc__victory-action .button {
     min-width: 0;
     width: min(100%, 280px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fc__bridge-bg,
+  .fc__bridge-sub,
+  .fc__buffer-pulse {
+    animation: none;
   }
 }

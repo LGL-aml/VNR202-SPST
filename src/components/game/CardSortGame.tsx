@@ -2,6 +2,7 @@ import { type DragEvent, type ReactNode, useEffect, useMemo, useState } from 're
 import { level2Cards } from '../../data/level2Cards'
 import { level2Categories } from '../../data/level2Categories'
 import type { SortCard } from '../../data/gameTypes'
+import { prefetchLevel3 } from '../../game/prefetchRoutes'
 import { AutoContinue } from './AutoContinue'
 import { Icon } from '../common/Icon'
 
@@ -64,6 +65,7 @@ export function CardSortGame({ completeActions }: CardSortGameProps) {
     if (nextLocked.size === level2Cards.length) {
       setStatus('correct')
       localStorage.setItem('vnr-game-v2-level-2', 'complete')
+      prefetchLevel3()
       return
     }
 

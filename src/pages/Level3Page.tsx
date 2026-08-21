@@ -8,6 +8,7 @@ import { RoomBanner } from '../components/game/RoomBanner'
 import { RoomLevelComplete } from '../components/game/RoomLevelComplete'
 import { Icon } from '../components/common/Icon'
 import { level3Questions } from '../data/level3Questions'
+import { prefetchFinalCinematic } from '../game/prefetchRoutes'
 import { LEADERBOARD_ROUTE } from '../game/room/types'
 import { useGameRoom } from '../game/room/useGameRoom'
 import '../components/game/gameLobby.css'
@@ -42,7 +43,10 @@ export function Level3Page() {
     if (!allAnswered || showGameOver) return
     const nextScore = level3Questions.filter((question) => answers[question.id] === question.correctAnswer).length
     setScore(nextScore)
-    if (nextScore === 5) localStorage.setItem('vnr-game-v2-level-3', 'complete')
+    if (nextScore === 5) {
+      localStorage.setItem('vnr-game-v2-level-3', 'complete')
+      prefetchFinalCinematic()
+    }
   }
 
   const retry = () => {

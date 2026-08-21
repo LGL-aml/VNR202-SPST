@@ -53,7 +53,7 @@ export function CodedPuzzle({ revealedCodes, complete }: CodedPuzzleProps) {
           <text className="puzzle-date" x="250" y="575">07.05.1954</text>
         </g>
       </svg>
-      <p>Mỗi mã đáp án đúng mở sáu mảnh của bức tranh. Hoàn thành 5/5 để hiện toàn bộ lá cờ chiến thắng.</p>
+      <p>Mỗi mã đáp án đúng mở sáu mảnh của bức tranh. Trả lời đúng cả 5 câu để hiện đủ hình hầm Điện Biên Phủ.</p>
     </div>
   )
 }

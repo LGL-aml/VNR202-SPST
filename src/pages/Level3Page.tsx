@@ -42,7 +42,7 @@ export function Level3Page() {
     if (!allAnswered || showGameOver) return
     const nextScore = level3Questions.filter((question) => answers[question.id] === question.correctAnswer).length
     setScore(nextScore)
-    if (nextScore >= 4) localStorage.setItem('vnr-game-v2-level-3', 'complete')
+    if (nextScore === 5) localStorage.setItem('vnr-game-v2-level-3', 'complete')
   }
 
   const retry = () => {
@@ -67,7 +67,7 @@ export function Level3Page() {
         concept="Củng cố"
         level="Màn 03"
         progress={`Đã trả lời ${answeredCount} / 5`}
-        subtitle="Trả lời đúng để từng bước hoàn thiện bức tranh chiến thắng."
+        subtitle="Trả lời đúng cả 5 câu để hiện đủ hình hầm Điện Biên Phủ và hoàn thành màn."
         title="Giải mã Điện Biên Phủ"
       />
 
@@ -77,7 +77,11 @@ export function Level3Page() {
           {score !== null && (
             <div className={`puzzle-result ${score === 5 ? 'is-perfect' : ''}`} aria-live="polite">
               <strong>{score} / 5 câu chính xác</strong>
-              <span>{score === 5 ? 'Bức tranh Điện Biên Phủ đã được giải mã' : `${score * 20}% bức tranh đã được giải mã`}</span>
+              <span>
+                {score === 5
+                  ? 'Hình hầm Điện Biên Phủ đã hiện đủ — chiến thắng được giải mã'
+                  : `${score * 20}% bức tranh đã được giải mã. Cần đúng 5/5 để hiện đủ hình.`}
+              </span>
             </div>
           )}
         </section>
@@ -104,10 +108,10 @@ export function Level3Page() {
           </div>
 
           {score !== null && (
-            <div className={`status-message ${score >= 4 ? 'status-message--success' : 'status-message--error'}`}>
-              {score <= 3 && 'Bạn cần ít nhất 4/5 câu đúng. Hãy xem lại hồ sơ chiến dịch và thử lại.'}
-              {score === 4 && '80% bức tranh đã được giải mã. Bạn có thể thử lại để hoàn thiện hoặc tiếp tục.'}
-              {score === 5 && 'Bức tranh Điện Biên Phủ đã được giải mã hoàn chỉnh.'}
+            <div className={`status-message ${score === 5 ? 'status-message--success' : 'status-message--error'}`}>
+              {score < 5 &&
+                'Bạn cần trả lời đúng cả 5 câu để hiện đủ hình hầm Điện Biên Phủ và qua màn. Hãy xem lại hồ sơ chiến dịch rồi thử lại.'}
+              {score === 5 && 'Bức tranh hầm Điện Biên Phủ đã được giải mã hoàn chỉnh. Bạn có thể tiếp tục.'}
             </div>
           )}
 
@@ -117,9 +121,12 @@ export function Level3Page() {
                 <Icon name="fact_check" /> Xác nhận đáp án
               </button>
             )}
-            {score !== null && score <= 3 && <button className="button" onClick={retry} type="button"><Icon name="restart_alt" /> Thử lại</button>}
-            {score === 4 && <button className="button button--secondary" onClick={retry} type="button"><Icon name="restart_alt" /> Thử lại để hoàn thiện</button>}
-            {score !== null && score >= 4 && inRoom && room && currentPlayer && !showGameOver && (
+            {score !== null && score < 5 && (
+              <button className="button" onClick={retry} type="button">
+                <Icon name="restart_alt" /> Thử lại
+              </button>
+            )}
+            {score === 5 && inRoom && room && currentPlayer && !showGameOver && (
               <RoomLevelComplete
                 currentPlayer={currentPlayer}
                 description="Sau 56 ngày đêm, chiến thắng Điện Biên Phủ tạo bước ngoặt quyết định cho cuộc kháng chiến."
@@ -130,7 +137,6 @@ export function Level3Page() {
                 title="Điện Biên Phủ đã được giải mã"
               />
             )}
-            {score === 4 && !inRoom && <AutoContinue label="Xem đoạn kết" to="/final" />}
             {score === 5 && !inRoom && <AutoContinue label="Xem đoạn kết" to="/final" />}
           </div>
         </section>

@@ -131,7 +131,7 @@ export const theoryChapters: TheoryChapter[] = [
   {
     slug: 'dien-bien-phu',
     number: '03',
-    period: '1953–1954',
+    period: '1954',
     title: 'Chiến dịch Điện Biên Phủ',
     summary: 'Từ quyết định mở chiến dịch, phối hợp chiến trường và bảo đảm hậu cần đến thắng lợi ngày 7-5-1954.',
     image:

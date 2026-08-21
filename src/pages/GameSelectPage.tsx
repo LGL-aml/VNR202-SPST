@@ -31,7 +31,7 @@ function LobbyView({
           Trò chơi <span>tương tác</span>
         </h1>
         <p className="page-lead">
-          Tạo phòng hoặc tham gia bằng mã — cùng vượt qua 3 màn lịch sử trên backend realtime.
+          Tạo phòng hoặc tham gia bằng mã — cùng vượt qua 3 màn lịch sử.
         </p>
         <button className="game-lobby__rules-toggle" onClick={() => setShowRules(true)} type="button">
           <Icon name="menu_book" /> Thể lệ trò chơi

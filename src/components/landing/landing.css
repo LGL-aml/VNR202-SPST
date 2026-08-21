@@ -752,6 +752,76 @@
   gap: 14px;
 }
 
+/* —— References —— */
+.lp-references {
+  border-top: 1px solid rgba(38, 56, 45, 0.14);
+  background:
+    linear-gradient(180deg, rgba(38, 56, 45, 0.04), transparent 42%),
+    var(--color-background);
+}
+
+.lp-references__inner {
+  width: min(100%, 880px);
+  margin: 0 auto;
+  padding: clamp(64px, 10vw, 110px) clamp(20px, 5vw, 64px) clamp(80px, 12vw, 130px);
+}
+
+.lp-references h2 {
+  margin: 0 0 28px;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.2vw, 2.35rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.lp-references__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: ref;
+}
+
+.lp-references__list li {
+  position: relative;
+  counter-increment: ref;
+  padding: 16px 0 16px 2.6rem;
+  border-top: 1px solid rgba(38, 56, 45, 0.12);
+  color: var(--color-brown);
+  font-family: var(--font-body);
+  font-size: clamp(0.92rem, 1.5vw, 1rem);
+  line-height: 1.7;
+}
+
+.lp-references__list li:last-child {
+  border-bottom: 1px solid rgba(38, 56, 45, 0.12);
+}
+
+.lp-references__list li::before {
+  position: absolute;
+  left: 0;
+  top: 16px;
+  content: counter(ref, decimal-leading-zero);
+  color: var(--color-accent);
+  font-family: var(--font-meta);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.lp-references__list a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(185, 151, 91, 0.45);
+  text-underline-offset: 0.22em;
+  transition: color var(--transition-base), text-decoration-color var(--transition-base);
+}
+
+.lp-references__list a:hover {
+  color: var(--color-primary);
+  text-decoration-color: var(--color-accent);
+}
+
 /* —— Responsive —— */
 @media (max-width: 980px) {
   .lp-timeline {

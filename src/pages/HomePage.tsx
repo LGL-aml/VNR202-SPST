@@ -10,6 +10,7 @@ import { YearTimeline } from '../components/landing/YearTimeline'
 import { YearSection } from '../components/landing/YearSection'
 import { StrategicMap1953 } from '../components/landing/StrategicMap1953'
 import { LandingVictory, LandingConclusion } from '../components/landing/LandingVictory'
+import { LandingReferences } from '../components/landing/LandingReferences'
 import '../components/landing/landing.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -201,6 +202,7 @@ export function HomePage() {
       ))}
       <LandingVictory />
       <LandingConclusion />
+      <LandingReferences />
     </div>
   )
 }

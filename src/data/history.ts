@@ -177,3 +177,57 @@ export const introContent = {
     { label: 'Nguồn lực', text: 'Hậu phương chi viện tiền tuyến' },
   ],
 }
+
+export type ReferenceItem = {
+  id: string
+  citation: string
+  href?: string
+}
+
+export const landingReferences: ReferenceItem[] = [
+  {
+    id: 'vkd-tap-12',
+    citation:
+      'Đảng Cộng sản Việt Nam (2001). Văn kiện Đảng Toàn tập (Tập 12: 1951). Hà Nội: NXB Chính trị quốc gia.',
+  },
+  {
+    id: 'chinh-cuong-1951',
+    citation:
+      'Cổng Thông tin điện tử Đảng Cộng sản Việt Nam. Chính cương Đảng Lao động Việt Nam (tháng 2-1951). Truy cập từ Trang Tư liệu - Văn kiện Đảng.',
+    href: 'https://tulieuvankien.dangcongsan.vn/ban-chap-hanh-trung-uong-dang/dai-hoi-dang/lan-thu-ii/chinh-cuong-dang-lao-dong-viet-nam-1448',
+  },
+  {
+    id: 'nien-bieu-dh-ii',
+    citation:
+      'Cổng Thông tin điện tử Đảng Cộng sản Việt Nam. Niên biểu toàn khóa Đại hội Đại biểu toàn quốc lần thứ II của Đảng. Truy cập từ Trang Tư liệu - Văn kiện Đảng.',
+    href: 'https://tulieuvankien.dangcongsan.vn/ban-chap-hanh-trung-uong-dang/dai-hoi-dang/lan-thu-ii/nien-bieu-toan-khoa-25',
+  },
+  {
+    id: 'dai-hoi-ii-overview',
+    citation:
+      'Báo Chính phủ / Cổng Thông tin điện tử Chính phủ (2021). Đảng Cộng sản Việt Nam qua các kỳ Đại hội: Đại hội II.',
+    href: 'https://baodienbienphu.vn/tin-bai/cac-ky-dai-hoi-dang-toan-quoc/dang-cong-san-viet-nam-qua-cac-ky-dai-hoi-dai-hoi-lan-thu-ii-cua-dang',
+  },
+  {
+    id: 'le-huy-vinh-2024',
+    citation:
+      'Thượng tướng, TS. Lê Huy Vịnh (2024). Chiến thắng Điện Biên Phủ - thành công xuất sắc trong nghệ thuật chỉ đạo chiến tranh của Đảng. Báo Quân đội nhân dân điện tử.',
+    href: 'https://www.qdnd.vn/quoc-phong-an-ninh/chien-thang-dien-bien-phu-moc-son-lich-su/dien-bien-chien-dich/chien-thang-dien-bien-phu-thanh-cong-xuat-sac-trong-nghe-thuat-chi-dao-chien-tranh-cua-dang-772068',
+  },
+  {
+    id: 'giao-trinh-lsd',
+    citation:
+      'Bộ Giáo dục và Đào tạo (2021). Giáo trình Lịch sử Đảng Cộng sản Việt Nam (Dành cho bậc đại học hệ không chuyên lý luận chính trị). Hà Nội: NXB Chính trị quốc gia Sự thật.',
+  },
+  {
+    id: 'vkd-tap-14',
+    citation:
+      'Đảng Cộng sản Việt Nam (2001). Văn kiện Đảng Toàn tập (Tập 14: 1953). Hà Nội: NXB Chính trị quốc gia.',
+  },
+  {
+    id: 'nhan-dan-2004',
+    citation:
+      'Báo Nhân Dân (2004). Về sự chỉ đạo chiến lược và chiến dịch trong Đông Xuân 1953 - 1954 và chiến dịch Điện Biên Phủ.',
+    href: 'https://nhandan.vn/ve-su-chi-dao-chien-luoc-va-chien-dich-trong-dong-xuan-1953-1954-va-chien-dich-dien-bien-phu-post465789.html',
+  },
+]

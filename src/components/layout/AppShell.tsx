@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useQuery } from 'convex/react'
 import { api } from '../../convex'
@@ -15,7 +15,7 @@ export function AppShell() {
   const navigate = useNavigate()
   const session = useGameSession()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const { soundEnabled, toggleSound } = useSiteAudio()
+  const { soundEnabled, toggleSound, pauseForCinematic, resumeAfterCinematic } = useSiteAudio()
   const isHome = pathname === '/'
   const isTheory = pathname.startsWith('/theory')
   const isGame = pathname.startsWith('/game')
@@ -24,6 +24,20 @@ export function AppShell() {
 
   const room = useQuery(api.rooms.get, session ? { roomId: session.roomId } : 'skip')
   const player = useQuery(api.rooms.getPlayer, session ? { playerId: session.playerId } : 'skip')
+
+  // Final victory video owns audio — mute site BGM while on /final
+  const wasFinalRef = useRef(false)
+  useEffect(() => {
+    if (isFinal) {
+      wasFinalRef.current = true
+      pauseForCinematic()
+      return
+    }
+    if (wasFinalRef.current) {
+      wasFinalRef.current = false
+      void resumeAfterCinematic()
+    }
+  }, [isFinal, pauseForCinematic, resumeAfterCinematic])
 
   useEffect(() => {
     setMobileOpen(false)

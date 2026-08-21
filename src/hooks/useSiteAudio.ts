@@ -3,6 +3,9 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 const AUDIO_SRC = '/audio/chienthangdienbienphu.mp3'
 const STORAGE_KEY = 'vnr-site-audio'
 
+/** While true, ambient track must not auto-start / gesture-unlock. */
+let cinematicAudioLock = false
+
 /**
  * Site-wide ambient track for the header volume control.
  * Tries autoplay on first visit; if the browser blocks it, starts on the first
@@ -48,8 +51,7 @@ export function useSiteAudio() {
     }
 
     const startPlayback = async () => {
-      // User muted explicitly — treat as settled so gesture handlers detach.
-      if (userDisabledRef.current) return true
+      if (cinematicAudioLock || userDisabledRef.current) return true
       if (unlockedRef.current) return true
       try {
         await audio.play()
@@ -90,7 +92,6 @@ export function useSiteAudio() {
       }
     }
 
-    // Start as soon as the file can play; also try immediately
     const onCanPlay = () => {
       void tryAutoplay()
     }
@@ -113,8 +114,6 @@ export function useSiteAudio() {
     if (soundEnabled) {
       audio.pause()
       userDisabledRef.current = true
-      // Keep unlocked so residual gesture handlers cannot call play() again;
-      // also detach them immediately.
       unlockedRef.current = true
       removeGestureListenersRef.current()
       removeGestureListenersRef.current = () => {}
@@ -128,6 +127,7 @@ export function useSiteAudio() {
     }
 
     try {
+      cinematicAudioLock = false
       userDisabledRef.current = false
       if (audio.paused) audio.currentTime = audio.currentTime || 0
       await audio.play()
@@ -145,5 +145,37 @@ export function useSiteAudio() {
     }
   }, [soundEnabled])
 
-  return { soundEnabled, toggleSound }
+  /** Pause ambient BGM for final video — does not change user's saved preference. */
+  const pauseForCinematic = useCallback(() => {
+    cinematicAudioLock = true
+    const audio = audioRef.current
+    if (audio && !audio.paused) audio.pause()
+    setSoundEnabled(false)
+    removeGestureListenersRef.current()
+    removeGestureListenersRef.current = () => {}
+  }, [])
+
+  /** Restore ambient BGM after cinematic if user had not muted permanently. */
+  const resumeAfterCinematic = useCallback(async () => {
+    cinematicAudioLock = false
+    let preferredOff = false
+    try {
+      preferredOff = localStorage.getItem(STORAGE_KEY) === 'off'
+    } catch {
+      /* ignore */
+    }
+    if (preferredOff || userDisabledRef.current) return
+
+    const audio = audioRef.current
+    if (!audio) return
+    try {
+      await audio.play()
+      unlockedRef.current = true
+      setSoundEnabled(true)
+    } catch {
+      setSoundEnabled(false)
+    }
+  }, [])
+
+  return { soundEnabled, toggleSound, pauseForCinematic, resumeAfterCinematic }
 }

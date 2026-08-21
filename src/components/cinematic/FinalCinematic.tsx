@@ -4,6 +4,7 @@ import './FinalCinematic.css'
 
 const VICTORY_VIDEO =
   'https://res.cloudinary.com/dxkvlbzzu/video/upload/v1787339706/ctdbp_ipopum.mp4'
+const VICTORY_BG = '/background_chienthangdbp.png'
 
 type FinalCinematicProps = {
   finishLabel: string
@@ -14,6 +15,7 @@ type Phase = 'video' | 'victory'
 
 export function FinalCinematic({ finishLabel, onFinished }: FinalCinematicProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const blurVideoRef = useRef<HTMLVideoElement>(null)
   const victoryRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const dateRef = useRef<HTMLParagraphElement>(null)
@@ -25,10 +27,8 @@ export function FinalCinematic({ finishLabel, onFinished }: FinalCinematicProps)
     if (endedRef.current) return
     endedRef.current = true
 
-    const video = videoRef.current
-    if (video) {
-      video.pause()
-    }
+    videoRef.current?.pause()
+    blurVideoRef.current?.pause()
 
     localStorage.setItem('vnr-final', 'complete')
     setPhase('victory')
@@ -36,6 +36,7 @@ export function FinalCinematic({ finishLabel, onFinished }: FinalCinematicProps)
 
   useEffect(() => {
     const video = videoRef.current
+    const blur = blurVideoRef.current
     if (!video || phase !== 'video') return
 
     const tryPlay = async () => {
@@ -48,6 +49,16 @@ export function FinalCinematic({ finishLabel, onFinished }: FinalCinematicProps)
           await video.play()
         } catch {
           /* browser blocked — user can skip */
+        }
+      }
+
+      if (blur) {
+        blur.muted = true
+        try {
+          blur.currentTime = video.currentTime || 0
+          await blur.play()
+        } catch {
+          /* ignore */
         }
       }
     }
@@ -81,10 +92,20 @@ export function FinalCinematic({ finishLabel, onFinished }: FinalCinematicProps)
   return (
     <div aria-label="Đoạn kết Chiến thắng Điện Biên Phủ" className="fc">
       {phase === 'video' && (
-        <>
+        <div className="fc__stage">
+          <video
+            aria-hidden="true"
+            autoPlay
+            className="fc__video fc__video--blur"
+            muted
+            playsInline
+            preload="auto"
+            ref={blurVideoRef}
+            src={VICTORY_VIDEO}
+          />
           <video
             autoPlay
-            className="fc__video"
+            className="fc__video fc__video--main"
             onEnded={goToVictory}
             playsInline
             preload="auto"
@@ -95,14 +116,14 @@ export function FinalCinematic({ finishLabel, onFinished }: FinalCinematicProps)
           <button className="fc__skip" onClick={goToVictory} type="button">
             Bỏ qua
           </button>
-        </>
+        </div>
       )}
 
       {phase === 'victory' && (
         <div
           className="fc__victory"
           ref={victoryRef}
-          style={{ backgroundImage: 'url(/background_chienthangdbp.png)' }}
+          style={{ backgroundImage: `url(${VICTORY_BG})` }}
         >
           <div aria-hidden="true" className="fc__victory-veil" />
           <div aria-hidden="true" className="fc__victory-grain" />

@@ -19,7 +19,8 @@ export function AppShell() {
   const isHome = pathname === '/'
   const isTheory = pathname.startsWith('/theory')
   const isGame = pathname.startsWith('/game')
-  const isImmersive = isHome || isTheory || isGame || pathname === '/final' || pathname === '/completed'
+  const isFinal = pathname === '/final'
+  const isImmersive = isHome || isTheory || isGame || isFinal || pathname === '/completed'
 
   const room = useQuery(api.rooms.get, session ? { roomId: session.roomId } : 'skip')
   const player = useQuery(api.rooms.getPlayer, session ? { playerId: session.playerId } : 'skip')
@@ -73,23 +74,26 @@ export function AppShell() {
         isHome ? 'is-home' : '',
         isTheory ? 'is-theory' : '',
         isGame ? 'is-game' : '',
+        isFinal ? 'is-final' : '',
       ]
         .filter(Boolean)
         .join(' ')}
     >
-      <Header
-        menuAvailable={false}
-        mobileMenuOpen={mobileOpen}
-        onToggleMenu={() => setMobileOpen((current) => !current)}
-        onToggleSound={() => {
-          void toggleSound()
-        }}
-        soundEnabled={soundEnabled}
-      />
+      {!isFinal && (
+        <Header
+          menuAvailable={false}
+          mobileMenuOpen={mobileOpen}
+          onToggleMenu={() => setMobileOpen((current) => !current)}
+          onToggleSound={() => {
+            void toggleSound()
+          }}
+          soundEnabled={soundEnabled}
+        />
+      )}
       <main className="app-main" id="main-content">
         <Outlet />
       </main>
-      <Footer />
+      {!isFinal && <Footer />}
     </div>
   )
 }

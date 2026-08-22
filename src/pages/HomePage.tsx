@@ -8,7 +8,6 @@ import { LandingHero } from '../components/landing/LandingHero'
 import { LandingIntro } from '../components/landing/LandingIntro'
 import { YearTimeline } from '../components/landing/YearTimeline'
 import { YearSection } from '../components/landing/YearSection'
-import { StrategicMap1953 } from '../components/landing/StrategicMap1953'
 import { LandingVictory, LandingConclusion } from '../components/landing/LandingVictory'
 import { LandingReferences } from '../components/landing/LandingReferences'
 import '../components/landing/landing.css'
@@ -114,25 +113,6 @@ export function HomePage() {
         )
       })
 
-      const routes = root.querySelectorAll('.lp-route')
-      routes.forEach((route, index) => {
-        const path = route as SVGPathElement
-        const length = path.getTotalLength()
-        path.style.strokeDasharray = `${length}`
-        path.style.strokeDashoffset = `${length}`
-
-        gsap.to(path, {
-          strokeDashoffset: 0,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.lp-strategy',
-            start: `top ${70 - index * 8}%`,
-            end: 'center center',
-            scrub: true,
-          },
-        })
-      })
-
       const progress = root.querySelector('.lp-timeline__progress')
       if (progress) {
         const isMobile = window.matchMedia('(max-width: 980px)').matches
@@ -195,10 +175,7 @@ export function HomePage() {
       <LandingHero />
       <LandingIntro />
       {historicalTimeline.map((entry, index) => (
-        <div key={entry.id}>
-          <YearSection entry={entry} index={index} />
-          {entry.year === '1953' && <StrategicMap1953 />}
-        </div>
+        <YearSection entry={entry} index={index} key={entry.id} />
       ))}
       <LandingVictory />
       <LandingConclusion />

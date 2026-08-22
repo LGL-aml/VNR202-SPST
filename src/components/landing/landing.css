@@ -340,7 +340,6 @@
 .lp-intro__figure figcaption,
 .lp-year__photo figcaption,
 .lp-year__map figcaption,
-.lp-strategy__photo figcaption,
 .lp-victory__figure figcaption {
   margin-top: 10px;
   color: var(--color-brown);
@@ -478,56 +477,6 @@
 
 .lp-year--1954 {
   background: linear-gradient(180deg, transparent, rgba(94, 33, 27, 0.06), transparent);
-}
-
-/* —— Strategy map —— */
-.lp-strategy {
-  width: min(100%, 1180px);
-  margin: 0 auto;
-  padding: 0 clamp(20px, 5vw, 64px) clamp(64px, 10vw, 120px);
-}
-
-.lp-strategy__copy {
-  max-width: 640px;
-  margin-bottom: 36px;
-}
-
-.lp-strategy__copy h2 {
-  margin: 0 0 14px;
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.lp-strategy__copy p:last-child {
-  margin: 0;
-  color: var(--color-brown);
-  line-height: 1.7;
-}
-
-.lp-strategy__stage {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 20px;
-  align-items: stretch;
-}
-
-.lp-strategy__svg {
-  width: 100%;
-  height: auto;
-  border: 1px solid var(--color-outline-soft);
-}
-
-.lp-strategy__photo {
-  margin: 0;
-}
-
-.lp-strategy__photo img {
-  height: 100%;
-  min-height: 280px;
-  aspect-ratio: 3 / 4;
-  border: 1px solid var(--color-outline-soft);
 }
 
 /* —— Victory —— */
@@ -861,8 +810,7 @@
 
   .lp-intro,
   .lp-year,
-  .lp-year.is-reversed,
-  .lp-strategy__stage {
+  .lp-year.is-reversed {
     grid-template-columns: 1fr;
   }
 
